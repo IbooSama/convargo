@@ -144,7 +144,12 @@ const actors = [{
     'amount': 0
   }]
 }];
-// test commit
-console.log(truckers);
+
+// Find the price of the deliveries
+for (var i = 0, len = deliveries.length; i < len; i++) {   
+        var taketruck = truckers.find(function(take) {return take.id == deliveries[i].truckerId ;});
+        deliveries[i].price= taketruck.pricePerKm * deliveries[i].distance + taketruck.pricePerVolume * deliveries[i].volume;
+}
 console.log(deliveries);
-console.log(actors);
+
+
