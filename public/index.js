@@ -144,7 +144,7 @@ const actors = [{
     'amount': 0
   }]
 }];
-
+// test commit
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
