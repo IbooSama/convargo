@@ -168,6 +168,13 @@ deliveries.forEach(function(delivery) {
   }
 
   delivery.price = trucker.pricePerKm * delivery.distance + pricePerVolume * delivery.volume;
+
+  var commission = delivery.price * 0.3;
+
+  delivery.commission.insurance = commission / 2;
+  delivery.commission.treasury = Math.ceil(delivery.distance / 500);
+  delivery.commission.convargo = commission - (delivery.commission.insurance + delivery.commission.treasury);
+  
 });
 
 
