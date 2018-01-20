@@ -168,7 +168,9 @@ deliveries.forEach(function(delivery) {
   }
 
   delivery.price = trucker.pricePerKm * delivery.distance + pricePerVolume * delivery.volume;
-
+  if (delivery.options.deductibleReduction) {
+    delivery.price += delivery.volume;
+  }
   var commission = delivery.price * 0.3;
 
   delivery.commission.insurance = commission / 2;
