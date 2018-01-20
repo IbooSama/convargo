@@ -169,7 +169,9 @@ deliveries.forEach(function(delivery) {
 
   delivery.price = trucker.pricePerKm * delivery.distance + pricePerVolume * delivery.volume;
   if (delivery.options.deductibleReduction) {
-    delivery.price += delivery.volume;
+    delivery.options.deductibleReductionPrice = delivery.volume;
+  } else {
+    delivery.options.deductibleReductionPrice = 0;
   }
   var commission = delivery.price * 0.3;
 
@@ -179,6 +181,33 @@ deliveries.forEach(function(delivery) {
   
 });
 
+actors.forEach(function(actor){
+  var delivery = deliveries.find(function(delivery){
+    return delivery.id == actor.deliveryId;
+  });
+  
+  actor.payment.find(function(pay){
+    return pay.who == "shipper" && pay.type == "debit";
+  }).amount = delivery.price + delivery.options.deductibleReductionPrice;
+
+  actor.payment.find(function(pay){
+    return pay.who == "treasury" && pay.type == "credit";
+  }).amount = delivery.commission.treasury;
+
+  actor.payment.find(function(pay){
+    return pay.who == "insurance" && pay.type == "credit";
+  }).amount = delivery.commission.insurance;
+
+  actor.payment.find(function(pay){
+    return pay.who == "trucker" && pay.type == "credit";
+  }).amount = delivery.price * 0.7;
+
+  actor.payment.find(function(pay){
+    return pay.who == "convargo" && pay.type == "credit";
+  }).amount = delivery.commission.convargo + delivery.options.deductibleReductionPrice;
+});
+
 
 
 console.log(deliveries);
+console.log(actors);
