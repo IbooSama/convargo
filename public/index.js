@@ -144,12 +144,32 @@ const actors = [{
     'amount': 0
   }]
 }];
+        
+/*deliveries.forEach(function(delivery) {
+  var taketruck = truckers.find(function(take) {return take.id == delivery.truckerId ;});
+  deliveries[i].price= taketruck.pricePerKm * deliveries[i].distance + taketruck.pricePerVolume * deliveries[i].volume;
+})*/
 
 // Find the price of the deliveries
-for (var i = 0, len = deliveries.length; i < len; i++) {   
-        var taketruck = truckers.find(function(take) {return take.id == deliveries[i].truckerId ;});
-        deliveries[i].price= taketruck.pricePerKm * deliveries[i].distance + taketruck.pricePerVolume * deliveries[i].volume;
-}
+deliveries.forEach(function(delivery) {  
+  var trucker = truckers.find(function(trucker) {
+    return trucker.id == delivery.truckerId;
+  });
+  
+  var pricePerVolume = trucker.pricePerVolume;
+
+  //add send more pay less structures
+  if (delivery.volume > 25 ) {
+    pricePerVolume = pricePerVolume - (pricePerVolume * 0.5); 
+  } else if (delivery.volume > 10 ) {
+    pricePerVolume = pricePerVolume - (pricePerVolume * 0.3);
+  } else if (delivery.volume > 5 ) {
+    pricePerVolume = pricePerVolume - (pricePerVolume * 0.1); 
+  }
+
+  delivery.price = trucker.pricePerKm * delivery.distance + pricePerVolume * delivery.volume;
+});
+
+
+
 console.log(deliveries);
-
-
